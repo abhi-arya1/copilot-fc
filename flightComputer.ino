@@ -10,15 +10,23 @@
 Adafruit_MPL3115A2 baro;
 Adafruit_ICM20948 icm;
 
+File altitude_and_pressure;
+File speed_and_accel;
+File gyro_angles;
+File temps;
+File gen_log; 
+
+int flightMode; 
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(3000);
 
   Serial.println("Setup Begin");
 
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
+  pinflightMode(5, OUTPUT);
+  pinflightMode(6, OUTPUT);
+  pinflightMode(7, OUTPUT);
 
   redOn();
 
@@ -27,7 +35,7 @@ void setup() {
     while(1);
   }
   Serial.println("Altimeter Initialized");
-  baro.setSeaPressure(1013.26);
+  baro.setSeaPressure(1014.10);
 
   if (!SD.begin(CS_PIN)) {
     Serial.println("SD card not inserted or card reader not found.");
@@ -46,9 +54,29 @@ void setup() {
   redOff();
 
   Serial.println("Setup Complete");
-  blink(GREEN, 4);
+  blink(GREEN, 2);
+
+  flightMode = 1; 
 }
 
 void loop() {
-  // work in progress 
+  float time = millis()/1000.0;
+
+  switch (flightMode) {
+    case 0: /** IDLE */
+      // if ready on pad, switch to PAD flightMode 
+    case 1: /** PAD */
+      // if(detect_launch()) { 
+      //   flightMode = 2; 
+      // } 
+    case 2: /** LAUNCH */
+      break;
+    case 3: /** DETECTED APOGEE RECOVERY */
+      break;
+    case 4: /** LANDED ROCKET */
+      break;
+    case 5: /** RECOVERY SUCCESSFUL */ 
+      break; 
+  }
 }
+
