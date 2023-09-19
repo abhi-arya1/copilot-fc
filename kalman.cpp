@@ -4,7 +4,7 @@
 float KALMAN_Altitude(float U) {
 
   // constants 
-  static const float R = 75; // noise covariance (higher = more filtering + more time)(10)
+  static const float R = 45; // noise covariance (higher = more filtering + more time)(10)
   static const float H = 1.00; // mes. map scalar
   static float Q = 10; // initial estimated covariance 
   static float P = 0; // inital error covariance (must be 0)

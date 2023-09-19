@@ -15,4 +15,9 @@ void blueOn();
 void blueOff();
 void blink(int COLOR, int TIMES);
 
+void pinkOn();
+void pinkOff(); 
+void cyanOn();
+void cyanOff(); 
+
 #endif

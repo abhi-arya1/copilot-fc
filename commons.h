@@ -6,7 +6,7 @@
 
 // header files
 #include "led_control.h"
-#include "altimeter.h"
+#include "kalman.h"
 
 // constants 
 #define CS_PIN 10

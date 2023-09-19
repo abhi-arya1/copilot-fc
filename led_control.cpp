@@ -32,3 +32,19 @@ void blink(int COLOR, int TIMES) {
     delay(450);
   }
 }
+
+void pinkOn() {
+  redOn(); blueOn();
+}
+
+void pinkOff() {
+  redOff(); blueOff(); 
+}
+
+void cyanOn() {
+  greenOn(); blueOn();
+}
+
+void cyanOff() {
+  greenOff(); blueOff(); 
+}
