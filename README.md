@@ -21,7 +21,12 @@ Thank you for reading! <br><br>
 
 # Documentation 
 ## Materials List 
-Coming soon...
+<li> <a href="https://www.pjrc.com/store/teensy40.html">Teensy 4.0 Microcontroller with ARM Cortex M7</a> </li>
+<li> <a href="https://www.adafruit.com/product/1893?gclid=CjwKCAjwjaWoBhAmEiwAXz8DBbLDT-5seaA8vgF_WWSk99L6WS4i_5ePbcoDpMWpPAwpMfeOV1QisxoCh2IQAvD_BwE">Adafruit MPL3115A2-I2C Barometer/Altimeter/Temperature Sensor</a></li>
+<li> <a href="https://learn.adafruit.com/adafruit-tdk-invensense-icm-20948-9-dof-imu">Adafruit ICM-20948 9-DoF IMU</a> </li>
+<li> 1 RGB LED, 1 10kOhm Resistor, 3 330Ohm Resistors, 1 Button, ELEGOO Development Board, a lot of solder and 22Awg wire, and some late nights. </li>
+<li> <i>(An Arduino R4 Minima was used for breadboard testing)</i></li>
+
 
 ## Photos and Videos 
 Coming soon...
