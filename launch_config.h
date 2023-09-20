@@ -1,11 +1,12 @@
 /** Change these values as necessary to handle a variety of flights */
+/* ---------------------------------------------------------------- */
 
 // Computer Mode {0: Systems Test (Disarmed), 1: Pyro Channel Test (Armed), 2: Active Flight Mode (Armed)}
 // (Currently only supports Computer Mode 0)
 #define COMP_MODE 0
 
 // Set barometric "zero" pressure so the altitude readings correspond to the current altitude 
-#define BARO_ZERO_PRESSURE 1014.10
+#define BARO_ZERO_PRESSURE 1013.2
 
 // 0 -> Rocket detects external launch mechanism
 // 1 -> Rocket activates channel to launch itself (Currently not supported)
@@ -23,7 +24,8 @@
 // 1 -> Pyro Channel Backup 
 #define PYRO_BACKUP_EN 0
 
+// Set data-logging baud rate
+#define BAUD_RATE 115200
+
 
  
-
-
