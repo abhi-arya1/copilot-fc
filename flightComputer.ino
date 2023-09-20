@@ -14,19 +14,23 @@ Adafruit_ICM20948 icm;
 File altitude_and_pressure;
 File speed_and_accel;
 File gyro_angles;
-File temps;
-File gen_log; 
+File temps; 
+File syLog; 
 
-int flightMode; 
+int flightMode = IDLE; 
 float launchCheckZero = 0;
-float initialAltitude = 0; 
+float initialAltitude = 0;
+float maximumAltitude = 0;  
+
+void sysLog(String s); 
+void print(String s); 
 
 void setup() {
-  Serial.begin(115200);
-  delay(3000);
+  // Begin Serial Output --------------- 
+  Serial.begin(BAUD_RATE);
+  delay(3000); 
 
-  Serial.println("Setup Begin");
-
+  // Initialize RGB Pins and Start-up LED ---------------
   pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
@@ -34,78 +38,145 @@ void setup() {
 
   redOn();
 
-  if (!baro.begin()) {
-    Serial.println("Altimeter Not Found");
-    while(1);
-  }
-  Serial.println("Altimeter Initialized");
-  baro.setSeaPressure(BARO_ZERO_PRESSURE);
-
+  // Begin SD card for data logging ---------------
   if (!SD.begin(CS_PIN)) {
-    Serial.println("SD card not inserted or card reader not found.");
+    print("SD card not inserted or card reader not found.");
     while (1);
   }
-  Serial.println("SD found!");
+  print("SD found! Started logging now!");
 
+  // begin logs ---------------
+  print("----------------------------");
+  print("Welcome to TAM (Software Version: pre-alpha v0.0.1)"); 
+  String baud = "Setup Begin with Serial on BAUD_RATE: ";
+  baud = baud + BAUD_RATE; 
+  print(baud); 
+
+  // Initialize Sensors ---------------
+
+  // MPL3115A2
+  if (!baro.begin()) {
+    print("Altimeter Not Found");
+    while(1);
+  }
+  print("Altimeter found!");
+  baro.setMode(MPL3115A2_ALTIMETER);
+  baro.setSeaPressure(BARO_ZERO_PRESSURE);
+
+  // ICM_20948X
   if (!icm.begin_I2C()) { 
     if (!icm.begin_I2C(0x69)) { // If not via default, try using I2C address 0x69
-      Serial.println("Failed to find IMU");
+      print("Failed to find IMU");
       while (1);
     }}
-  Serial.println("IMU Found!");
+  print("IMU found!");
+  // TODO get IMU sensors calibrated with proper data ranges 
 
-  delay(1500);
+  // Setup Cooldown Sequence ---------------
+  delay(750);
   redOff();
-
-  Serial.println("Setup Complete");
-  blink(GREEN, 2);
-
-  flightMode = 0; 
-
+  print("Setup Complete");
+  print("----------------------------");
+  blink(GREEN, 2, 300); 
   delay(250); 
+
+    // Ready for flight! ---------------
+  flightMode = IDLE; 
+  print("TAM is ready for flight. Flight Mode set to *IDLE* (0)");
 }
 
 void loop() {
-  //float time = millis()/1000.0;
+  //float time = millis()/1000.0; // (for datalogging)
+  //Serial.print("Flight Mode: "); Serial.println(flightMode); // (for testing)
 
+  // TODO complete pyro test section (E-match units)
   // if(COMP_MODE == 1) {
-  //   // TODO complete pyro test section 
+  //   
   // } 
+  
 
+  // Mode switcher ---------------
   switch (flightMode) {
-    case 0: /** IDLE */
+    case IDLE: 
       cyanOn();
-      if(digitalRead(8) == HIGH) {
-        flightMode = 1; 
+      if(digitalRead(8) == HIGH) { // check for button press to disable idle mode (to be replaced with screw switch)
+        print("Flight Mode Changed to *PAD* (1) from *IDLE* (0)");
+        flightMode = PAD; 
         cyanOff(); 
       }
       break; 
-    case 1: /** PAD */ 
+    case PAD: 
     { pinkOn(); 
-      
+        
       if(LAUNCH_METHOD == 0) 
       { // detect a potential launch 
         // (TODO combine launch detect algo with accelerometer)
         float altitude = KALMAN_Altitude(baro.getAltitude());
-        if (launchCheckZero == 0) { initialAltitude = baro.getAltitude(); launchCheckZero = 1; }
         Serial.print(altitude); Serial.print(", "); Serial.println(initialAltitude); 
-        if ((altitude - 1) > initialAltitude) { flightMode = 2; pinkOff(); } // launch detected
+
+        // set a baseline altitude
+        if (launchCheckZero <= 5) { 
+          initialAltitude = baro.getAltitude(); 
+          launchCheckZero++; 
+        }
+
+        // detect a launch (TODO combine with accelerometer data for accurancy)
+        if ((altitude - 1) > initialAltitude) { 
+          flightMode = ASCENT; pinkOff(); 
+          print("LAUNCH DETECTED, Flight Mode Changed to *ASCENT* (2) from *PAD* (1)");
+        }
       }
       else if (LAUNCH_METHOD == 1) {
-        // TODO create self-launch pyro support  
+        // TODO create self-launch pyro support (coming soon) 
       }
+      break; 
+    } // TODO finish stage handling 
+    case ASCENT:
+      blueOn(); 
 
+      // TODO data-logging and other ascent related features 
+      
       break; 
-    }
-    case 2: /** LAUNCH */
-      blueOn();  
+    case DESCENT_RECOVERY: 
+      // TODO parachute handling 
       break;
-    case 3: /** DETECTED APOGEE -> ENABLE RECOVERY */
+    case LANDED: 
+      // TODO celebrate! (also make sure SD files are saved and the computer is yk...alive)
       break;
-    case 4: /** LANDED ROCKET */
-      break;
-    case 5: /** RECOVERY SUCCESSFUL */ 
-      break; 
   }
+
+  // Data Logger ---------------
+  if(flightMode != IDLE && flightMode != PAD && flightMode != LANDED) {
+    // IMU Data
+    sensors_event_t accel;
+    sensors_event_t gyro;
+    sensors_event_t temp;
+    icm.getEvent(&accel, &gyro, &temp); 
+
+    // Altimeter Data 
+    float altitude = baro.getAltitude();
+    float pressure = baro.getPressure();
+
+    // TODO complete data logger 
+  }
+}
+
+void sysLog(String s) {
+  syLog = SD.open("sysLog.txt", FILE_WRITE);
+  if(syLog) {
+    // print general log information before message 
+    syLog.print("Time: "); syLog.print(millis()/1000.0); syLog.print(" / Flight Mode: ");
+    syLog.print(flightMode); syLog.print(" / --> "); 
+
+    syLog.println(s); 
+    syLog.close();
+  }
+}
+
+void print(String s) {
+  Serial.print("Time: "); Serial.print(millis()/1000.0); Serial.print(" / FltMode: ");
+  Serial.print(flightMode); Serial.print(" / --> "); 
+  Serial.println(s);
+  sysLog(s); 
 }
 
