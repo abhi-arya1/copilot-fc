@@ -26,7 +26,7 @@ Thank you for reading! <br><br>
 <li> <a href="https://learn.adafruit.com/adafruit-tdk-invensense-icm-20948-9-dof-imu">Adafruit ICM-20948 9-DoF IMU</a> </li>
 <li> <a href="https://www.adafruit.com/product/254">Adafruit SD Breakout Board</a> with SanDisk 32GB SD Card </li>
 <li> 1 RGB LED, 1 10kOhm Resistor, 3 330Ohm Resistors, 1 Button, ELEGOO Development Board, a lot of solder and 22Awg wire, and some late nights. </li>
-<li> <i>(An Arduino R4 Minima was used for breadboard testing)</i></li>
+<li> <i>(An Arduino Uno R4 Minima and Adafruit Metro Mini were used for breadboard testing)</i></li>
 
 
 ## Photos and Videos 
