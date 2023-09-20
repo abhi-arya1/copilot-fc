@@ -1,5 +1,6 @@
 #include "kalman.h"
 
+// TODO get a better Kalman Filter algo ASAP 
 // tuned y/n: "mostly complete"
 float KALMAN_Altitude(float U) {
 
