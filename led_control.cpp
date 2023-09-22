@@ -1,5 +1,14 @@
 #include "led_control.h"
 
+void blink(int COLOR, int TIMES, int DELAY) {
+  for(int i = 1; i <= TIMES; i++) {
+    digitalWrite(COLOR, HIGH);
+    delay(DELAY);
+    digitalWrite(COLOR, LOW);
+    delay(DELAY);
+  }
+}
+
 void redOn() {
   digitalWrite(RED, HIGH);
 }
@@ -24,15 +33,6 @@ void greenOff() {
   digitalWrite(GREEN, LOW);
 }
 
-void blink(int COLOR, int TIMES) {
-  for(int i = 1; i <= TIMES; i++) {
-    digitalWrite(COLOR, HIGH);
-    delay(450);
-    digitalWrite(COLOR, LOW);
-    delay(450);
-  }
-}
-
 void pinkOn() {
   redOn(); blueOn();
 }
@@ -47,4 +47,12 @@ void cyanOn() {
 
 void cyanOff() {
   greenOff(); blueOff(); 
+}
+
+void yellowOn() {
+  greenOn(); redOn();
+}
+
+void yellowOff() {
+  greenOff(); redOff(); 
 }
