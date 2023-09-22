@@ -56,7 +56,7 @@ void setup() {
 
   // begin logs ---------------
   print("----------------------------");
-  print("Welcome to TAM (Software Version: pre-alpha v0.0.1)"); 
+  print("Welcome to copilot Flight Software (Version: pre-alpha v0.0.2)"); 
   String baud = "Setup Begin with Serial on BAUD_RATE: ";
   baud = baud + BAUD_RATE; 
   print(baud); 
@@ -109,7 +109,7 @@ void setup() {
 
     // Ready for flight! ---------------
   flightMode = IDLE; 
-  print("TAM is ready for flight. Flight Mode set to *IDLE* (0)");
+  print("copilot is ready for flight. Flight Mode set to *IDLE* (0)");
 }
 
 void loop() {
