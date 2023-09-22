@@ -130,10 +130,21 @@ void loop() {
         print("Flight Mode Changed to *PAD* (1) from *IDLE* (0)");
         flightMode = PAD; 
         cyanOff(); 
+        delay(250); 
       }
       break; 
     case PAD: 
     { pinkOn(); 
+
+      // pad abort system 
+      if(digitalRead(8) == HIGH) {
+        flightMode = IDLE;
+        print("Pad Mode Aborted, Flight Mode Changed to *IDLE* (0) from *PAD* (1)"); 
+        initialAltitude = altFilter.reading(baro.getAltitude()); 
+        launchCheckZero = 0; 
+        delay(250); 
+        pinkOff(); 
+      }
         
       // detect a potential launch 
       if(LAUNCH_METHOD == 0) 
@@ -163,8 +174,17 @@ void loop() {
     case ASCENT:
       yellowOn(); 
 
+      // accidental read abort system 
+      if(digitalRead(8) == HIGH) {
+        flightMode = IDLE; 
+        print("Ascent Mode Aborted (Accidental Read), Flight Mode Changed to *IDLE* (0) from *ASCENT* (2)"); 
+        initialAltitude = altFilter.reading(baro.getAltitude()); 
+        launchCheckZero = 0;
+        delay(250); 
+        yellowOff(); 
+      }
+
       // TODO data-logging and other ascent related features 
-      
       break; 
     case DESCENT_RECOVERY: 
       blueOn(); 
