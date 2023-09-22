@@ -6,7 +6,7 @@
 
 // header files
 #include "led_control.h"
-#include "kalman.h"
+#include "filters.h"
 
 // constants 
 #define CS_PIN 10
