@@ -25,9 +25,13 @@ File speed_and_accel;
 File gyro_angles;
 File temps; 
 File syLog; 
+const char* fileNames[5]
+      = { "SYSLOG.TXT", "ALT_AND_PRESSURE.TXT", "SPEED_AND_ACCEL.TXT", 
+          "GYRO_AND_ANGLES.TXT", "TEMPERATURES.TXT" };
 
 int flightMode = IDLE; 
-float launchCheckZero = 0;
+int launchCheckZero = 0;
+int apogeeCheckFour = 1; 
 float initialAltitude = 0;
 float maximumAltitude = 0;  
 
@@ -53,7 +57,8 @@ void setup() {
     print("SD card not inserted or card reader not found.");
     while (1);
   }
-  SD.remove("SYSLOG.TXT"); 
+  for(int i = 0; i < 5; i++) {
+    SD.remove(fileNames[i]); }
   print("SD setup complete! Started logging now!");
 
   // begin logs ---------------
@@ -166,6 +171,7 @@ void loop() {
         if ((adjAltitude - 1) > initialAltitude) { 
           flightMode = ASCENT; pinkOff(); 
           print("LAUNCH DETECTED, Flight Mode Changed to *ASCENT* (2) from *PAD* (1)");
+          print("Began Data Logging"); 
         }
       }
       else if (LAUNCH_METHOD == 1) {
@@ -173,7 +179,7 @@ void loop() {
       }
       break; 
     } // TODO finish stage handling 
-    case ASCENT:
+    case ASCENT: {
       yellowOn(); 
 
       // accidental read abort system 
@@ -186,8 +192,26 @@ void loop() {
         yellowOff(); 
       }
 
-      // TODO data-logging and other ascent related features 
+      // TODO data-logging and apogee-detect, and other related features
+
+      // apogee detect (needs to be tuned) 
+      float altitude = altFilter.reading(baro.getAltitude());  
+      Serial.print(altitude); Serial.print(", "); Serial.println(maximumAltitude); 
+      if(altitude > maximumAltitude) { maximumAltitude = altitude; }
+      if(altitude < maximumAltitude) {
+        if(apogeeCheckFour == 4) {
+          yellowOff(); 
+          flightMode = DESCENT_RECOVERY; 
+          delay(250); 
+          print("APOGEE DETECTED, Flight Mode changed to *DESCENT_RECOVERY* (3) from *ASCENT* (2)"); 
+          print("Preparing Chutes"); 
+        } else {
+          apogeeCheckFour++; 
+        }
+      }
+      
       break; 
+    }
     case DESCENT_RECOVERY: 
       blueOn(); 
 
@@ -202,31 +226,33 @@ void loop() {
       break;
   }
 
-  // Data Logger ---------------
-  if(flightMode != IDLE && flightMode != PAD && flightMode != LANDED) {
-    // IMU Data
-    sensors_event_t accel;
-    sensors_event_t gyro;
-    sensors_event_t temp;
-    icm.getEvent(&accel, &gyro, &temp); 
+  // // Data Logger ---------------
+  // if(flightMode != IDLE && flightMode != PAD && flightMode != LANDED) {
+  //   // IMU Data
+  //   sensors_event_t accel;
+  //   sensors_event_t gyro;
+  //   sensors_event_t temp;
+  //   icm.getEvent(&accel, &gyro, &temp); 
 
-    // TODO add this additional data and process it :)
-    // rollRate = (float)gyro.gyro.x/16.4;
-    // pitchRate = (float)gyro.gyro.y/16.4;
+  //   // TODO add this additional data and process it :)
+  //   // rollRate = (float)gyro.gyro.x/16.4;
+  //   // pitchRate = (float)gyro.gyro.y/16.4;
 
-    // accelX = (float)accel.acceleration.x/2048;
-    // accelY = (float)accel.acceleration.y/2048;
-    // accelZ = (float)accel.acceleration.z/2048;
+  //   // accelX = (float)accel.acceleration.x/2048;
+  //   // accelY = (float)accel.acceleration.y/2048;
+  //   // accelZ = (float)accel.acceleration.z/2048;
 
-    // rollAngle = atan(accelY/sqrt(accelX*accelX + accelZ*accelZ)) * (1/(3.142/180)) + 1.67;
-    // pitchAngle =  atan(accelZ/sqrt(accelY*accelY + accelX*accelX)) * (1/(3.142/180)); 
+  //   // rollAngle = atan(accelY/sqrt(accelX*accelX + accelZ*accelZ)) * (1/(3.142/180)) + 1.67;
+  //   // pitchAngle =  atan(accelZ/sqrt(accelY*accelY + accelX*accelX)) * (1/(3.142/180)); 
 
-    // Altimeter Data 
-    float altitude = baro.getAltitude();
-    float pressure = baro.getPressure();
+  //   // Altimeter Data 
+  //   float altitude = baro.getAltitude();
+  //   float pressure = baro.getPressure();
 
-    // TODO complete data logger 
-  }
+  //   // TODO complete data logger 
+  // }
+
+// end of loop ---
 }
 
 void sysLog(String s) {
