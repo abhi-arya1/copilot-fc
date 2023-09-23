@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-#define RED 5
-#define GREEN 6 
-#define BLUE 7 
+#define RED 6
+#define GREEN 4 
+#define BLUE 5 
 
 void blink(int COLOR, int TIMES, int DELAY);
 
