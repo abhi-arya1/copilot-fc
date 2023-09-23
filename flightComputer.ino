@@ -40,23 +40,25 @@ void setup() {
   delay(3000); 
 
   // Initialize RGB Pins and Start-up LED ---------------
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(8, INPUT); 
+  pinMode(RED, OUTPUT);
+  pinMode(GREEN, OUTPUT);
+  pinMode(BLUE, OUTPUT);
+  pinMode(BUTTON, INPUT); 
 
-  redOn();
+  //cycle(250); 
+  redOn(); 
 
   // Begin SD card for data logging ---------------
   if (!SD.begin(CS_PIN)) {
     print("SD card not inserted or card reader not found.");
     while (1);
   }
-  print("SD found! Started logging now!");
+  SD.remove("SYSLOG.TXT"); 
+  print("SD setup complete! Started logging now!");
 
   // begin logs ---------------
   print("----------------------------");
-  print("Welcome to copilot Flight Software (Version: pre-alpha v0.0.2)"); 
+  print("Welcome to *copilot* Flight Software (Version: pre-alpha v0.0.3)"); 
   String baud = "Setup Begin with Serial on BAUD_RATE: ";
   baud = baud + BAUD_RATE; 
   print(baud); 
