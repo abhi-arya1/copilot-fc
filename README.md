@@ -2,14 +2,14 @@
 
 <h1 align="center">copilot avionics module</h1>
 <p align="center">
-<a href=""><img src="https://img.shields.io/badge/version-pre_alpha_v0.0.2-red" alt="Build In Progress"></a>
+<a href=""><img src="https://img.shields.io/badge/version-pre_alpha_v0.0.3-red" alt="Build In Progress"></a>
 <a href="mailto:abhigyaa@uci.edu"><img src="https://img.shields.io/badge/contact-abhigyaa@uci.edu-blue" alt="email"></a>
 </p>
 
 <!-- introduction --> 
 
 # introduction 
-welcome to the repository hosting code for <b>copilot pre-alpha v0.0.2</b>. <br><br>
+welcome to the repository hosting code for <b>copilot pre-alpha v0.0.3</b>. <br><br>
 copilot is an flight computer designed to handle multi-mode flight with open-source software upgradability, including but not limited to:
 <li>managing control systems</li><li>self-timed launch</li><li>flight data logging and data broadcasting</li><li>parachute ejection/rocket recovery</li><li>GPS location handling</li> <br>and more! <br><br>
 
@@ -30,7 +30,7 @@ thank you for reading! <br><br>
 
 
 ## photos and videos 
-Coming soon...
+Coming very very very soon...
 
 ## schematics, wiring diagrams, etc. 
 Coming soon...
