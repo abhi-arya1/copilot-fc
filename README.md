@@ -30,7 +30,7 @@ thank you for reading! <br><br>
 
 
 ## photos and videos 
-Coming very very very soon...
+![Image of Flight Computer](./images/Image1.png)
 
 ## schematics, wiring diagrams, etc. 
 Coming soon...
