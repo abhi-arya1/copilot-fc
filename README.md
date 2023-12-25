@@ -30,7 +30,11 @@ thank you for reading! <br><br>
 
 
 ## photos and videos 
-![Image of Flight Computer](./images/Image1.png)
+- Full Computer
+<img src="https://i.imgur.com/lqqj9XL.png" height=30% width=30% />
+
+- Breadboard Layout 
+<img src="https://i.imgur.com/jbNn8lU.jpg" height=30% width=30% />
 
 ## schematics, wiring diagrams, etc. 
 Coming soon...
